@@ -41,6 +41,69 @@ public class EarthQuakeClient {
         
         return answer;
     }
+    
+     public ArrayList<QuakeEntry> filterByDepth(ArrayList<QuakeEntry> quakeData,
+    double minDepth, double maxDepth) {
+        ArrayList<QuakeEntry> answer = new ArrayList<QuakeEntry>();
+        for(QuakeEntry qe: quakeData)
+        {
+            if(qe.getDepth() > minDepth && qe.getDepth() < maxDepth)
+            {
+                System.out.println(qe.getInfo());
+                answer.add(qe);  
+            }
+        }
+
+        return answer;
+    }
+
+    public ArrayList<QuakeEntry> filterByPhrase(ArrayList<QuakeEntry> quakeData,
+    String where, String title) {
+        ArrayList<QuakeEntry> answer = new ArrayList<QuakeEntry>() ;
+        
+        switch(where)
+        {
+            case "start":
+                System.out.println("Imprimindo com START");
+                for(QuakeEntry qe: quakeData)
+                {
+                    if(qe.getInfo().startsWith(title)){
+                        System.out.println(qe.getInfo());
+                        answer.add(qe);
+                    }
+                }
+            
+            break;
+            
+            case "any":
+                System.out.println("Imprimindo com ANY");    
+                for(QuakeEntry qe: quakeData)
+                    {
+                        if(qe.getInfo().indexOf(title) != -1){
+                            System.out.println(qe.getInfo());
+                            answer.add(qe);
+                        }
+                    }
+                break;
+            
+            case "end":
+                System.out.println("Imprimindo com END");
+                for(QuakeEntry qe: quakeData)
+                {
+                    if(qe.getInfo().endsWith(title)){
+                        System.out.println(qe.getInfo());
+                        answer.add(qe);
+                    }
+                }
+            break;
+            
+
+        }
+        return answer;
+    }
+    
+    
+
 
     public void dumpCSV(ArrayList<QuakeEntry> list){
         System.out.println("Latitude,Longitude,Magnitude,Info");
@@ -82,6 +145,26 @@ public class EarthQuakeClient {
                  ArrayList<QuakeEntry> list_filtered2 = filterByDistanceFrom(list, 1000, bridgetport);
       //  System.out.println(list_filtered.size());
         System.out.println(list_filtered2.size());
+        
+    }
+    
+    public void quakesByPhrase(){
+        EarthQuakeParser parser = new EarthQuakeParser();
+        String source = "data/nov20quakedatasmall.atom";
+        ArrayList<QuakeEntry> list  = parser.read(source);
+        ArrayList<QuakeEntry> list_filtered2 = filterByPhrase(list, "end", "California");
+      
+      
+        
+    }
+    
+     public void quakesOfDepth(){
+        EarthQuakeParser parser = new EarthQuakeParser();
+        String source = "data/nov20quakedatasmall.atom";
+        ArrayList<QuakeEntry> list  = parser.read(source);
+        ArrayList<QuakeEntry> list_filtered2 = filterByDepth(list, -10000.0, -5000.0);
+      
+      
         
     }
 
